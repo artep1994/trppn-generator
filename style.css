@@ -27,29 +27,19 @@ border-radius: 25px;
 opacity: 0.5;
 }
 
-#title_rm {
-  font-size: 18pt;
-  color: #222222;
-  padding-bottom: 5%;
-}
-
-#title_tm {
-  font-size: 18pt;
-  color: #222222;
-  padding-bottom: 5%;
-}
-
-#title_tdm {
-  font-size: 18pt;
-  color: #222222;
-  padding-bottom: 5%;
-}
 
 .gui-container > * {
   padding: 0.2rem;
   font-size: 11pt;
   color: #858585;
   font-family: 'TRYGrtsk-Reg', sans-serif;
+}
+
+.gui-modetitle {
+  font-size: 16pt;
+  position: absolute;
+  top: 0;
+  left: 50%;
 }
 
 .select {

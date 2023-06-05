@@ -9,98 +9,37 @@ let numSpiralSlider;
 let clonePositionSlider;
 let xScaleSlider;
 let charSpacingAngleSlider;
-let textSpacingSlider;
  
 let useMode = [
-    { id: "rectDrawMode", buttonLabel: "Rectangle Mode" },
+    { id: "rectDrawMode", buttonLabel: "Rect Draw Mode" },
     { id: "textMode", buttonLabel: "Text Mode" },
-    { id: "textBendMode", buttonLabel: "Text Distortion Mode" },
-]; // Array of modes with their IDs and button labels
+    { id: "textBendMode", buttonLabel: "Text Bend Mode" },
+];
  
-let currentModeIndex = 'rectDrawMode'; // Default mode index
+let currentModeIndex = 'rectDrawMode';
  
-let centerX; // X-coordinate of canvas center
-let centerY; // y-coordinate of canvas center
+let centerX;
+let centerY;
  
-let exportButton; // Export button
+let exportButton;
  
 let wideMedium;
 let wideBold;
 let spatialBold;
-let fontSelector; // Font selector dropdown
+let fontSelector;
  
 function preload() {
-  // Preload fonts
     WideMediumItalic = loadFont("fonts/WideMediumItalic.ttf");
     SpatialBoldItalic = loadFont("fonts/SpatialBoldItalic.ttf");
     WideBoldItalic = loadFont("fonts/WideBoldItalic.ttf");
 }
  
 function setup() {
-    createCanvas(windowWidth, windowHeight, SVG); // Create SVG canvas
+    createCanvas(windowWidth, windowHeight, SVG);
  
-    let container = createDiv(); // Setting up the GUI
+    let container = createDiv();
     container.class("gui-container");
  
-    let rectModeTitle = createDiv("Rectangle mode");
-    rectModeTitle.id("title_rm");
-    rectModeTitle.class("rect-mode");
-    rectModeTitle.parent(container);
- 
-    let textModeTitle = createDiv("Text mode");
-    textModeTitle.id("title_tm");
-    textModeTitle.class("text-mode");
-    textModeTitle.parent(container);
- 
-    let textBendModeTitle = createDiv("Text Distortion mode");
-    textBendModeTitle.id("title_tdm");
-    textBendModeTitle.class("textdistort-mode");
-    textBendModeTitle.parent(container);
- 
-    // Font selector
-    let fontSelectorLabel = createDiv("Font selector");
-    fontSelectorLabel.parent(container);
-    fontSelectorLabel.class("text-mode");
-    let fontSelectorContainer = createDiv();
-    fontSelectorContainer.parent(container);
-    fontSelectorContainer.class("select");
-    fontSelectorContainer.addClass("text-mode");
-    let fontSelectorArrow = createDiv();
-    fontSelectorArrow.parent(fontSelectorContainer);
-    fontSelectorArrow.class("select_arrow");
- 
-    fontSelector = createSelect();
-    fontSelector.parent(fontSelectorContainer);
-    fontSelector.option("WideMediumItalic");
-    fontSelector.option("WideBoldItalic");
-    fontSelector.option("SpatialBoldItalic");
-    fontSelector.changed(changeFont);
- 
-    // Text input field
-    let textStringLabel = createDiv("Text input");
-    textStringLabel.parent(container);
-    textStringLabel.addClass("text-mode");
-    textStringInput = createInput("Hello");
-    textStringInput.parent(container);
-    textStringInput.addClass("css-input text-mode");
- 
-    // Font size Slider
-    let textSizeLabel = createDiv("Type size");
-    textSizeLabel.parent(container);
-    textSizeLabel.addClass("text-mode");
-    textSizeSlider = createSlider(0, 100, 50);
-    textSizeSlider.parent(container);
-    textSizeSlider.addClass("text-mode");
- 
-    // X-scale Slider
-    let xScaleLabel = createDiv("X-Scale");
-    xScaleLabel.parent(container);
-    xScaleLabel.addClass("text-mode");
-    xScaleSlider = createSlider(1, 5, 1, 0.01);
-    xScaleSlider.parent(container);
-    xScaleSlider.addClass("text-mode");
- 
-    // Clones Slider
     let numClonesLabel = createDiv("Number of clones");
     numClonesLabel.parent(container);
     numClonesLabel.addClass("default-mode");
@@ -108,7 +47,6 @@ function setup() {
     numClonesSlider.parent(container);
     numClonesSlider.addClass("default-mode");
  
-    // Spirals
     let numSpiralLabel = createDiv("Number of spirals");
     numSpiralLabel.parent(container);
     numSpiralLabel.addClass("default-mode");
@@ -116,7 +54,6 @@ function setup() {
     numSpiralSlider.parent(container);
     numSpiralSlider.addClass("default-mode");
  
-    // Spiral positioning
     let clonePosLabel = createDiv("Spiral position");
     clonePosLabel.parent(container);
     clonePosLabel.addClass("default-mode");
@@ -124,7 +61,6 @@ function setup() {
     clonePosSlider.parent(container);
     clonePosSlider.addClass("default-mode");
  
-    // Radius Slider
     let radiusLabel = createDiv("Radius");
     radiusLabel.parent(container);
     radiusLabel.addClass("default-mode");
@@ -132,7 +68,6 @@ function setup() {
     radiusSlider.parent(container);
     radiusSlider.addClass("default-mode");
  
-    // Rotation Slider
     let rotationLabel = createDiv("Rotation");
     rotationLabel.parent(container);
     rotationLabel.addClass("default-mode");
@@ -140,7 +75,6 @@ function setup() {
     rotationSlider.parent(container);
     rotationSlider.addClass("default-mode");
  
-    // Angle Slider
     let angleLabel = createDiv("Angle");
     angleLabel.parent(container);
     angleLabel.addClass("default-mode");
@@ -148,39 +82,69 @@ function setup() {
     angleSlider.parent(container);
     angleSlider.addClass("default-mode");
  
-    // Rectangle Size Slider
     let rectSizeLabel = createDiv("Rectangle size");
     rectSizeLabel.parent(container);
     rectSizeLabel.addClass("rect-mode");
     rectSizeSlider = createSlider(10, 150, 50);
     rectSizeSlider.parent(container);
     rectSizeSlider.addClass("rect-mode");
+
+        // Font selector
+        let fontSelectorLabel = createDiv("Font selector");
+        fontSelectorLabel.parent(container);
+        fontSelectorLabel.class("text-mode");
+        let fontSelectorContainer = createDiv();
+        fontSelectorContainer.parent(container);
+        fontSelectorContainer.class("select");
+        fontSelectorContainer.addClass("text-mode");
+        let fontSelectorArrow = createDiv();
+        fontSelectorArrow.parent(fontSelectorContainer);
+        fontSelectorArrow.class("select_arrow");
+     
+        fontSelector = createSelect();
+        fontSelector.parent(fontSelectorContainer);
+        fontSelector.option("WideMediumItalic");
+        fontSelector.option("WideBoldItalic");
+        fontSelector.option("SpatialBoldItalic");
+        fontSelector.changed(changeFont);
+        selectedFont = fontSelector.value();
+     
+        // Create text input panel in the first row
+        let textStringLabel = createDiv("Text input");
+        textStringLabel.parent(container);
+        textStringLabel.addClass("text-mode");
+        textStringInput = createInput("Hello");
+        textStringInput.parent(container);
+        textStringInput.addClass("css-input text-mode");
+     
+        let textSizeLabel = createDiv("Type size");
+        textSizeLabel.parent(container);
+        textSizeLabel.addClass("text-mode");
+        textSizeSlider = createSlider(0, 100, 50);
+        textSizeSlider.parent(container);
+        textSizeSlider.addClass("text-mode");
+     
+        let xScaleLabel = createDiv("X-Scale");
+        xScaleLabel.parent(container);
+        xScaleLabel.addClass("text-mode");
+        xScaleSlider = createSlider(1, 5, 1, 0.01);
+        xScaleSlider.parent(container);
+        xScaleSlider.addClass("text-mode");
  
-    // Character Bending Slider
     let charSpacingLabel = createDiv("Character bend");
     charSpacingLabel.parent(container);
     charSpacingLabel.addClass("textdistort-mode");
-    charSpacingAngleSlider = createSlider(40, 100, 30, 0.01);
+    charSpacingAngleSlider = createSlider(20, 100, 20, 0.01);
     charSpacingAngleSlider.parent(container);
     charSpacingAngleSlider.addClass("textdistort-mode");
-    
-    // Character Bending Slider
-    let textSpacingLabel = createDiv("Letter spacing");
-    textSpacingLabel.parent(container);
-    textSpacingLabel.addClass("textdistort-mode");
-    textSpacingSlider = createSlider(40, 100, 30, 0.01);
-    textSpacingSlider.parent(container);
-    textSpacingSlider.addClass("textdistort-mode");
  
     centerX = width / 2;
     centerY = height / 2;
  
-    // Create button container
     let buttonContainer = createDiv();
     buttonContainer.class("buttonContainer");
     buttonContainer.parent(container);
  
-    // Create buttons for each use mode
     for (let i = 0; i < useMode.length; i++) {
         createButton(useMode[i].buttonLabel)
             .parent(buttonContainer)
@@ -206,10 +170,9 @@ function setup() {
         angleSlider,
         rectSizeSlider,
         numSpiralSlider,
-        clonePositionSlider,
         xScaleSlider,
         charSpacingAngleSlider,
-        textSpacingSlider
+        clonePosSlider
     ].forEach((slider) => {
         if (slider && slider.elt) {
             slider.elt.addEventListener("input", () => {
@@ -229,6 +192,8 @@ function manualDraw() {
     // Set current mode
     const currentMode = currentModeIndex;
  
+  console.log(currentModeIndex);
+ 
     // Get values from sliders and input field
     let numClones = numClonesSlider.value();
     let radius = radiusSlider.value();
@@ -240,7 +205,7 @@ function manualDraw() {
     let clonePosition = clonePosSlider.value();
     let xScaleValue = xScaleSlider.value();
     let charBendValue = charSpacingAngleSlider.value();
-    let textSpacingValue = textSpacingSlider.value();
+
  
     // Update center position based on canvas center
     centerX = width / 2;
@@ -343,7 +308,6 @@ function manualDraw() {
             numSpirals,
             clonePosition,
             charBendValue,
-            textSpacingValue
         });
     }
 }
@@ -460,7 +424,6 @@ function txtBendMode({
     numSpirals,
     clonePosition,
     charBendValue,
-    textSpacingValue
 }) {
     for (let i = 0; i < numSpirals; i++) {
         for (let j = 0; j < numClones; j++) {
@@ -472,7 +435,6 @@ function txtBendMode({
                 centerY +
                 (radius + clonePosition * i) *
                     sin(angle + (j * TWO_PI) / numClones);
-
             // Call textBendMode and store the transformed text
             transformedText = textBendMode({
                 x,
@@ -484,7 +446,6 @@ function txtBendMode({
                 xScaleValue,
                 centerX,
                 centerY,
-                textSpacingValue
             });
         }
         angle += rotation;
@@ -492,64 +453,66 @@ function txtBendMode({
 }
  
 function textBendMode({
-  x,
-  y,
-  radius,
-  rotation,
-  textString,
-  charBendValue,
-  textSizeValue,
-  xScaleValue,
-  centerX,
-  centerY,
-  textSpacingValue,
+    x,
+    y,
+    radius,
+    rotation,
+    textString,
+    charBendValue,
+    textSizeValue,
+    xScaleValue,
+    centerX,
+    centerY,
 }) {
-  let chars = textString.split("");
-
-  push();
-  translate(x, y);
-  rotate(rotation);
-  textAlign(LEFT, BASELINE);
-  textSize(textSizeValue);
-  textFont(fontSelector.value());
-  rotate(radians((chars.length * charBendValue) / 5));
-
-  let angleToCenter = atan2(centerY - y, centerX - x);
-  rotate(angleToCenter + HALF_PI);
-
-  for (let i = 0; i < chars.length; i++) {
-    push(); // Push the current transformation matrix before applying transformations
-    scale(xScaleValue, 1);
-
-    let letterSpacing = textSpacingValue;
-    let letters = textString.split('');
-    let newText = letters.join('\u200A'.repeat(letterSpacing)); // Join the letters with the adjusted letter spacing
-
-
-    let spacedChar = addLetterSpacing(chars[i], 1); // Modify the spacing amount as desired
-    text(spacedChar, 0, -charBendValue * 2);
-    pop(); // Restore the previous transformation matrix
-    rotate(radians(charBendValue / 2));
-  }
-  pop();
-
-  // Join the characters back together into a variable
-  let transformedText = chars.join("");
-  return transformedText;
+    let chars = textString.split("");
+ 
+    push();
+    translate(x, y);
+    rotate(rotation);
+    textAlign(LEFT, BASELINE);
+    textSize(textSizeValue);
+    textFont(fontSelector.value());
+    rotate(radians((chars.length * charBendValue) / 5));
+ 
+    let angleToCenter = atan2(centerY - y, centerX - x);
+    rotate(angleToCenter + HALF_PI);
+ 
+    for (let i = 0; i < chars.length; i++) {
+        scale(xScaleValue, 1);
+        let spacedChar = addLetterSpacing(chars[i], 1); // Modify the spacing amount as desired
+        text(spacedChar, 0, -100);
+        rotate(radians(charBendValue / 2));
+    }
+    pop();
+ 
+    // Join the characters back together into a variable
+    transformedText = chars.join("");
+    return transformedText;
 }
-
-function addLetterSpacing(textSpacingValue, textString) {
-  let letterSpacing = textSpacingValue;
-  let letters = textString.split('');
-  let newText = letters.join('\u200A'.repeat(letterSpacing)); // Join the letters with the adjusted letter spacing
-  return newText;
+ 
+function addLetterSpacing(input, amount, spacer) {
+    // 'spacer' character to use
+    // (can be passed in as an optional argument, or it
+    // will use the unicode 'hair space' one by default)
+    spacerCharacter = "\u200A" || spacer;
+ 
+    // split the string into a list of characters
+    let characters = input.split("");
+ 
+    // create a series of spacers using the
+    // repeat() function
+    spacerCharacter = spacerCharacter.repeat(amount);
+ 
+    // use join() to combine characters with the spacer
+    // and send back as a string
+    return characters.join(spacerCharacter);
 }
-
  
 function changeFont() {
     let selectedFont = fontSelector.value();
     let font = loadFont(`fonts/${selectedFont}.ttf`, () => {
         textFont(font);
+        manualDraw();
     });
 }
  

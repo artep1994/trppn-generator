@@ -35,11 +35,16 @@ opacity: 0.5;
   font-family: 'TRYGrtsk-Reg', sans-serif;
 }
 
-.gui-modetitle {
-  font-size: 16pt;
-  position: absolute;
-  top: 0;
-  left: 50%;
+.rectDrawMode button:nth-last-child(4) {
+  background-color: white;
+}
+
+.textMode button:nth-last-child(3) {
+  background-color: white;
+}
+
+.textBendMode button:nth-last-child(2) {
+  background-color: white;
 }
 
 .select {
@@ -119,6 +124,10 @@ button {
 button:hover {
   color: #4F4F4F;
   background-color: #ffffff;
+}
+
+.buttonactiveMode {
+  background-color: red;
 }
 
 input[type=range] {

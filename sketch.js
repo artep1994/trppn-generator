@@ -146,11 +146,12 @@ function setup() {
     buttonContainer.parent(container);
  
     for (let i = 0; i < useMode.length; i++) {
-        createButton(useMode[i].buttonLabel)
+        let modeButton = createButton(useMode[i].buttonLabel)
             .parent(buttonContainer)
             .mousePressed(() => {
                 currentModeIndex = useMode[i].id;
                 // Draw only when the button was pressed.
+                buttonContainer.elt.className = "buttonContainer " + currentModeIndex;
                 manualDraw();
             });
     }

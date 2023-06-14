@@ -9,6 +9,34 @@ let numSpiralSlider;
 let clonePositionSlider;
 let xScaleSlider;
 let charSpacingAngleSlider;
+
+const letters = {
+    ' ': { 'default': -1 },
+    'A': { 'V': -0.5, 'Y': -0.5, 'T': -0.2, 'W': -0.5 },
+    'T': { 'A': -0.3, 'a': -0.3, 'O': -0.5, 'o': -0.2, 'e': -0.2, 'w': -0.2 },
+    'L': { 'T': -0.1, 'V': -0.2, 'Y': -0.2, 'W': -0.2 },
+    'I': { 'S': 1 },
+    'V': { 'A': -0.1, '/': -0.1 },
+    'l': { 'e': -0.3, 'o': -1 },
+    'o': { 'l': -0.3 },
+    'V': { 'L': -0.2, 'W': -0.3, 'v': -0.2, 'w': -0.3 },
+    'Y': { 'A': -0.4, 'y': -0.4 },
+    'T': { 'L': -0.2, 'V': -0.3, 't': -0.2 },
+    'W': { 'A': -0.5, 'w': -0.5 },
+    'A': { 'T': -0.2, 'V': -0.3, 'a': -0.3 },
+    'S': { 'I': -0.1 },
+    'e': { 'T': -0.2, 'l': -0.3 },
+    'w': { 'T': -0.2, 'v': -0.2 },
+    'o': { 'T': -0.2, 'l': -0.3 },
+    'a': { 'T': -0.3 },
+    'O': { 'T': -0.5 },
+    'Y': { 'L': -0.2, 'V': -0.3, 'y': -0.4 },
+    'l': { 'V': -0.2, 't': -0.2 },
+    '/': { 'V': -0.1 },
+    'v': { 'A': -0.1, 'L': -0.2, 'W': -0.3, 'y': -0.2, 'w': -0.3 },
+    't': { 'A': -0.1, 'L': -0.2, 'V': -0.3 },
+    'y': { 'A': -0.4, 'L': -0.2, 'V': -0.3 },
+  };
  
 let useMode = [
     { id: "rectDrawMode", buttonLabel: "Rect Draw Mode" },
@@ -71,7 +99,7 @@ function setup() {
     let rotationLabel = createDiv("Rotation");
     rotationLabel.parent(container);
     rotationLabel.addClass("default-mode");
-    rotationSlider = createSlider(0.01, 10, 3, 0.01);
+    rotationSlider = createSlider(0.01, 10, 2, 0.01);
     rotationSlider.parent(container);
     rotationSlider.addClass("default-mode");
  
@@ -113,28 +141,28 @@ function setup() {
         let textStringLabel = createDiv("Text input");
         textStringLabel.parent(container);
         textStringLabel.addClass("text-mode");
-        textStringInput = createInput("Hello");
+        textStringInput = createInput("trppn");
         textStringInput.parent(container);
         textStringInput.addClass("css-input text-mode");
      
         let textSizeLabel = createDiv("Type size");
         textSizeLabel.parent(container);
         textSizeLabel.addClass("text-mode");
-        textSizeSlider = createSlider(0, 100, 50);
+        textSizeSlider = createSlider(0, 100, 20);
         textSizeSlider.parent(container);
         textSizeSlider.addClass("text-mode");
      
         let xScaleLabel = createDiv("X-Scale");
         xScaleLabel.parent(container);
         xScaleLabel.addClass("text-mode");
-        xScaleSlider = createSlider(1, 5, 1, 0.01);
+        xScaleSlider = createSlider(1, 5, 1.1, 0.01);
         xScaleSlider.parent(container);
         xScaleSlider.addClass("text-mode");
  
     let charSpacingLabel = createDiv("Character bend");
     charSpacingLabel.parent(container);
     charSpacingLabel.addClass("textdistort-mode");
-    charSpacingAngleSlider = createSlider(20, 100, 20, 0.01);
+    charSpacingAngleSlider = createSlider(0, 50, 15, 0.01);
     charSpacingAngleSlider.parent(container);
     charSpacingAngleSlider.addClass("textdistort-mode");
  
@@ -436,8 +464,9 @@ function txtBendMode({
                 centerY +
                 (radius + clonePosition * i) *
                     sin(angle + (j * TWO_PI) / numClones);
-            // Call textBendMode and store the transformed text
-            transformedText = textBendMode({
+            
+            
+            drawBendTextAtPosition({
                 x,
                 y,
                 rotation,
@@ -453,7 +482,7 @@ function txtBendMode({
     }
 }
  
-function textBendMode({
+function drawBendTextAtPosition({
     x,
     y,
     radius,
@@ -465,48 +494,63 @@ function textBendMode({
     centerX,
     centerY,
 }) {
-    let chars = textString.split("");
+    
+    
+    textAlign( LEFT, BASELINE );
+    textSize( textSizeValue );
+    textFont( fontSelector.value( ) );
+    
+    
+    let chars = textString.split('');
  
-    push();
-    translate(x, y);
-    rotate(rotation);
-    textAlign(LEFT, BASELINE);
-    textSize(textSizeValue);
-    textFont(fontSelector.value());
-    rotate(radians((chars.length * charBendValue) / 5));
+    push( );
+
+    translate( x, y );
+    rotate( rotation);
  
-    let angleToCenter = atan2(centerY - y, centerX - x);
-    rotate(angleToCenter + HALF_PI);
+    let angleToCenter = atan2( centerY - y, centerX - x );
+    rotate( angleToCenter + HALF_PI );
  
-    for (let i = 0; i < chars.length; i++) {
-        scale(xScaleValue, 1);
-        let spacedChar = addLetterSpacing(chars[i], 1); // Modify the spacing amount as desired
-        text(spacedChar, 0, -100);
-        rotate(radians(charBendValue / 2));
-    }
+    let xcoord = 0;
+    chars.forEach( ( char, index ) => {
+    
+        scale( xScaleValue, 1 );
+        translate( xcoord, 0 );
+        
+        // UPDATE xcoord WITH CURRENT CHAR WIDTH (MULTIPLIED BY xScaleValue)
+        xcoord += textWidth( char );
+        
+        // IF IT IS NOT THE LAST CHARACTER ..
+		if ( index < chars.length - 1 ) {
+
+		// .. LOOK UP THE NEXT
+		const next = chars[ index + 1 ];
+
+		// THIS LETTER HAS AN ARRAY OF EXCEPTONAL SPACINGS
+		if ( letters[ char ] ) {  
+
+			const spacings = letters[ char ];
+			let spacing = spacings.default || 0;       
+
+			// .. AND ONE EXISTS FOR THE NEXT CHARACTER
+			if ( spacings[ next ] ) {    
+
+				// OVERWRITE THE DEFAULT SPACING FOR THE ONE MATCHING THIS CHARACTER PAIR
+				spacing = spacings[ next ];
+			}
+
+			// ONLY ADD A MARGIN RIGHT WHENEVER THE SPACING != 0;
+			if ( spacing != 0 ) 
+				xcoord += spacing * textSizeValue;
+			}
+		}
+        
+        
+        text( char, xcoord, 1);
+        rotate( radians( charBendValue ) );
+    } )
     pop();
- 
-    // Join the characters back together into a variable
-    transformedText = chars.join("");
-    return transformedText;
-}
- 
-function addLetterSpacing(input, amount, spacer) {
-    // 'spacer' character to use
-    // (can be passed in as an optional argument, or it
-    // will use the unicode 'hair space' one by default)
-    spacerCharacter = "\u200A" || spacer;
- 
-    // split the string into a list of characters
-    let characters = input.split("");
- 
-    // create a series of spacers using the
-    // repeat() function
-    spacerCharacter = spacerCharacter.repeat(amount);
- 
-    // use join() to combine characters with the spacer
-    // and send back as a string
-    return characters.join(spacerCharacter);
+
 }
  
 function changeFont() {

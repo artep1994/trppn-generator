@@ -10,7 +10,14 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    overflow-x: hidden;
     }
+
+#defaultCanvas0 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
 
 .gui-container{
 display: flex;
@@ -19,9 +26,9 @@ align-items: flex-start;
 padding: 1rem;
 position: absolute;
 height: auto;
-width: 18rem;
-left: 2%;
-top: 2%;
+width: 15rem;
+left: 1%;
+top: 1.5%;
 background: #E5E5E5;
 border-radius: 25px;
 opacity: 0.5;
@@ -46,6 +53,7 @@ opacity: 0.5;
 .textBendMode button:nth-last-child(2) {
   background-color: white;
 }
+
 
 .select {
   position: relative;
@@ -105,7 +113,6 @@ opacity: 0.5;
 .buttonContainer {
   position: relative;
   width: 100%;
-  padding-top: 10%;
 }
 
 button {
@@ -113,7 +120,7 @@ button {
     width: 100%;
     color: #858585;
     padding: 5% !important;
-    margin-top: 2%;
+    margin-top: 3%;
     border-radius: 25px;
     border: none;
     font-family: 'TRYGrtsk-Reg', sans-serif;
@@ -126,8 +133,23 @@ button:hover {
   background-color: #ffffff;
 }
 
-.buttonactiveMode {
-  background-color: red;
+.timeTravelButtons {
+  display: flex;
+  gap: 3%;
+  position: relative;
+  width: 100%;
+  padding-bottom: 10%;
+  margin-top: -3%;
+}
+
+.timeTravelButtons button {
+  width: 50%;
+}
+
+#backarrow {
+  background-image: url('backarrow.svg');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 input[type=range] {

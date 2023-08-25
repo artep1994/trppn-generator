@@ -58,11 +58,21 @@ let fontSelector;
  
 const history = [];
  
+let WideMediumItalic;
+let SpatialBoldItalic;
+
+var selectedFont
+var fonts
+
 function preload() {
-    WideMediumItalic = loadFont("fonts/WideMediumItalic.ttf");
-    SpatialBoldItalic = loadFont("fonts/SpatialBoldItalic.ttf");
-    WideBoldItalic = loadFont("fonts/WideBoldItalic.ttf");
+   fonts = {
+    "Wide Medium Italic": loadFont("fonts/PPRightGrotesk-WideMediumItalic.ttf"),
+    "Spatial Bold Italic": loadFont("fonts/PPRightGrotesk-SpatialBlackItalic.ttf"),
+
+   }
+   selectedFont = fonts["Wide Medium Italic"];
 }
+
  
 function pushHistory() {
     let numClones = numClonesSlider.value();
@@ -178,12 +188,20 @@ function setup() {
     resetToDef.parent(timeTravelButton);
     resetToDef.mousePressed(resetState);
  
-    let goBackOneStep;
-    goBackOneStep = createButton("");
-    goBackOneStep.parent(timeTravelButton);
-    goBackOneStep.id("backarrow");
-    // goBackOneStep.class("timetravelButtons");
-    goBackOneStep.mousePressed(goBackInHistory);
+    // let goBackOneStep;
+    // goBackOneStep = createButton("");
+    // goBackOneStep.parent(timeTravelButton);
+    // goBackOneStep.id("backarrow");
+    // // goBackOneStep.class("timetravelButtons");
+    // goBackOneStep.mousePressed(goBackInHistory);
+
+    // Create text input panel in the first row
+    let textStringLabel = createDiv("Text input");
+    textStringLabel.parent(container);
+    textStringLabel.addClass("text-mode");
+    textStringInput = createInput("  trppn");
+    textStringInput.parent(container);
+    textStringInput.addClass("css-input text-mode");    
  
     let numClonesLabel = createDiv("Number of clones");
     numClonesLabel.parent(container);
@@ -212,20 +230,20 @@ function setup() {
     radiusSlider = createSlider(10, 300, 150);
     radiusSlider.parent(container);
     radiusSlider.addClass("default-mode");
- 
-    let rotationLabel = createDiv("Rotation");
-    rotationLabel.parent(container);
-    rotationLabel.addClass("default-mode");
-    rotationSlider = createSlider(0.01, 10, 2, 0.01);
-    rotationSlider.parent(container);
-    rotationSlider.addClass("default-mode");
- 
+
     let angleLabel = createDiv("Angle");
     angleLabel.parent(container);
     angleLabel.addClass("default-mode");
     angleSlider = createSlider(0, 1, 0.1, 0.01);
     angleSlider.parent(container);
     angleSlider.addClass("default-mode");
+ 
+    let rotationLabel = createDiv("Rotation");
+    rotationLabel.parent(container);
+    rotationLabel.addClass("default-mode");
+    rotationSlider = createSlider(0.01, 10, 1, 0.01);
+    rotationSlider.parent(container);
+    rotationSlider.addClass("default-mode");
  
     let rectSizeLabel = createDiv("Rectangle size");
     rectSizeLabel.parent(container);
@@ -234,6 +252,13 @@ function setup() {
     rectSizeSlider.parent(container);
     rectSizeSlider.addClass("rect-mode");
  
+    let textSizeLabel = createDiv("Type size");
+    textSizeLabel.parent(container);
+    textSizeLabel.addClass("text-mode");
+    textSizeSlider = createSlider(0, 100, 30);
+    textSizeSlider.parent(container);
+    textSizeSlider.addClass("text-mode");
+
     // Font selector
     let fontSelectorLabel = createDiv("Font selector");
     fontSelectorLabel.parent(container);
@@ -248,28 +273,12 @@ function setup() {
  
     fontSelector = createSelect();
     fontSelector.parent(fontSelectorContainer);
-    fontSelector.option("WideMediumItalic");
-    fontSelector.option("WideBoldItalic");
-    fontSelector.option("SpatialBoldItalic");
+    Object.keys(fonts).forEach((font) => {
+        fontSelector.option(font);
+    });
     fontSelector.changed(changeFont);
-    selectedFont = fontSelector.value();
  
-    // Create text input panel in the first row
-    let textStringLabel = createDiv("Text input");
-    textStringLabel.parent(container);
-    textStringLabel.addClass("text-mode");
-    textStringInput = createInput("trppn");
-    textStringInput.parent(container);
-    textStringInput.addClass("css-input text-mode");
- 
-    let textSizeLabel = createDiv("Type size");
-    textSizeLabel.parent(container);
-    textSizeLabel.addClass("text-mode");
-    textSizeSlider = createSlider(0, 100, 20);
-    textSizeSlider.parent(container);
-    textSizeSlider.addClass("text-mode");
- 
-    let xScaleLabel = createDiv("X-Scale");
+    let xScaleLabel = createDiv("Width");
     xScaleLabel.parent(container);
     xScaleLabel.addClass("text-mode");
     xScaleSlider = createSlider(1, 5, 1.1, 0.01);
@@ -283,7 +292,7 @@ function setup() {
     charSpacingAngleSlider.parent(container);
     charSpacingAngleSlider.addClass("textdistort-mode");
  
-    centerX = w /2;
+    centerX = w /1.45;
     centerY = h /2;
 
  
@@ -326,7 +335,7 @@ window.onresize = function() {
  
 function manualDraw() {
     clear();
-    background(255, 255, 255);
+    background(16, 26, 62);
  
     // Set current mode
     const currentMode = currentModeIndex;
@@ -485,7 +494,7 @@ function drawRectangleWithAngle(x, y, centerX, centerY) {
  
     // Draw rectangle
     rectMode(CENTER);
-    let c = color(0, 0, 0);
+    let c = color(55, 136, 230);
     fill(c);
     noStroke();
     rect(0, 0, rectSizeSlider.value(), rectSizeSlider.value() / 2);
@@ -541,8 +550,11 @@ function drawTextAtPosition(
     translate(x, y);
     rotate(rotation);
     textAlign(LEFT, BASELINE);
+    let c = color(55, 136, 230);
+    fill(c);
     textSize(textSizeValue);
-    textFont(fontSelector.value());
+    console.log(selectedFont);
+    textFont(selectedFont);
     // Calculate angle to align text towards center
     let angleToCenter = atan2(centerY - y, centerX - x);
     rotate(angleToCenter - HALF_PI);
@@ -604,7 +616,8 @@ function drawBendTextAtPosition({
 }) {
     textAlign(LEFT, BASELINE);
     textSize(textSizeValue);
-    textFont(fontSelector.value());
+    console.log(selectedFont);
+    textFont(selectedFont);
  
     let chars = textString.split("");
  
@@ -612,6 +625,8 @@ function drawBendTextAtPosition({
  
     translate(x, y);
     rotate(rotation);
+    let c = color(55, 136, 230);
+    fill(c);
  
     let angleToCenter = atan2(centerY - y, centerX - x);
     rotate(angleToCenter + HALF_PI);
@@ -647,20 +662,19 @@ function drawBendTextAtPosition({
             }
         }
  
-        text(char);
+        text(char, 0, 0);
         rotate(radians(charBendValue));
     });
     pop();
 }
  
 function changeFont() {
-    let selectedFont = fontSelector.value();
-    let font = loadFont(`fonts/${selectedFont}.ttf`, () => {
-        textFont(font);
-        manualDraw();
-    });
+    selectedFont = fonts[fontSelector.value()];
+    textFont(selectedFont);
+    manualDraw();
+
 }
  
 function exportSVG() {
-    save("mySVG.svg");
+    save("TRPPN_SVG_.svg");
 }
